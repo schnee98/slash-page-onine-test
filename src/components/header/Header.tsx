@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import ElevatorButton from "./ElevatorButton";
-import { useContext } from 'react';
-import { ElevatorStackContext } from '../../context/ElevatorStack';
+import { useContext } from "react";
+import { ElevatorInfoContext } from "../../context/ElevatorStack";
 
 const buttons = Array.from({ length: 15 });
 
 export default function Header() {
-  const [stack] = useContext(ElevatorStackContext);
+  const [{ freeElevators: stack }] = useContext(ElevatorInfoContext);
 
   return (
     <Wrapper>
@@ -29,5 +29,5 @@ const Description = styled.span`
 const ButtonList = styled.div<{ stack: Array<number> }>`
   display: flex;
   border: 1px solid #ccc9c9a4;
-  background-color: ${({ stack }) => stack.length === 0 ? "gray" : "transparent" };
+  background-color: ${({ stack }) => (stack.length === 0 ? "gray" : "transparent")};
 `;

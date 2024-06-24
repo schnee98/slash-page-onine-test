@@ -1,13 +1,69 @@
-import { Dispatch, FC, PropsWithChildren, SetStateAction, createContext, useState } from "react";
+import { Dispatch, FC, PropsWithChildren, createContext, useReducer } from "react";
 
-type ElevatorStackType = [Array<number>, Dispatch<SetStateAction<Array<number>>>];
+interface MovingElevator {
+  index: number;
+  targetFloor: number;
+}
 
-export const ElevatorStackContext = createContext<ElevatorStackType>([[], () => {}]);
+interface ElevatorInfoState {
+  freeElevators: Array<number>;
+  movingElevators: Array<MovingElevator>;
+}
 
-const initialStackState = [2, 1, 0];
+type ElevatorAction =
+  | { type: "ADD_FREE_ELEVATOR"; payload: { index: number } }
+  | { type: "REMOVE_FREE_ELEVATOR" }
+  | { type: "ADD_MOVING_ELEVATOR"; payload: { movingElevator: MovingElevator } }
+  | { type: "REMOVE_MOVING_ELEVATOR"; payload: { index: number } };
 
-export const ElevatorStackProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [stackState, setStackState] = useState<Array<number>>(initialStackState);
+type ElevatorInfoType = [ElevatorInfoState, Dispatch<ElevatorAction>];
 
-  return <ElevatorStackContext.Provider value={[stackState, setStackState]}>{children}</ElevatorStackContext.Provider>;
+export const ElevatorInfoContext = createContext<ElevatorInfoType>([
+  {
+    freeElevators: [],
+    movingElevators: [],
+  },
+  () => {},
+]);
+
+const initialInfoState = {
+  freeElevators: [2, 1, 0],
+  movingElevators: [],
+};
+
+const elevatorReducer = (state: ElevatorInfoState, action: ElevatorAction) => {
+  const { freeElevators, movingElevators } = state;
+  const { type } = action;
+  const newFreeElevators = [...freeElevators];
+  const newMovingElevators = [...movingElevators];
+  switch (type) {
+    case "ADD_FREE_ELEVATOR":
+      return {
+        ...state,
+        freeElevators: [...freeElevators, action.payload.index],
+      };
+    case "REMOVE_FREE_ELEVATOR":
+      newFreeElevators.pop();
+      return { ...state, freeElevators: newFreeElevators };
+    case "ADD_MOVING_ELEVATOR":
+      newMovingElevators.push(action.payload.movingElevator);
+      return {
+        ...state,
+        movingElevators: newMovingElevators,
+      };
+    case "REMOVE_MOVING_ELEVATOR":
+      newMovingElevators.pop();
+      return {
+        ...state,
+        movingElevators: newMovingElevators,
+      };
+    default:
+      return state;
+  }
+};
+
+export const ElevatorInfoProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [infoState, dispatchInfoState] = useReducer(elevatorReducer, initialInfoState);
+
+  return <ElevatorInfoContext.Provider value={[infoState, dispatchInfoState]}>{children}</ElevatorInfoContext.Provider>;
 };
