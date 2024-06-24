@@ -17,14 +17,12 @@ const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 80px;
 `;
 
 const Content = styled.div`
-  width: 600px;
   display: flex;
   gap: 20px;
 `;

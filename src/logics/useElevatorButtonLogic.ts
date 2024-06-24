@@ -2,7 +2,7 @@ import { MouseEvent, useContext, useEffect, useState } from "react";
 import { ElevatorInfoContext } from "../context/ElevatorInfoContext";
 
 export default function useElevatorButtonLogic({ index }: { index: number }) {
-  const [{ freeElevators, movingElevators }, dispatchInfoState] = useContext(ElevatorInfoContext);
+  const [{ movingElevators, isReady }, dispatchInfoState] = useContext(ElevatorInfoContext);
   const [isClicked, setIsClicked] = useState<boolean>(false);
 
   const toggleFreeElevatorToMove = (targetFloor: number) =>
@@ -28,7 +28,8 @@ export default function useElevatorButtonLogic({ index }: { index: number }) {
 
   return {
     isClicked,
-    stackLength: freeElevators.length,
+    isReady,
+    stackLength: movingElevators.length,
     handleClick,
   };
 }

@@ -9,8 +9,17 @@ export default function useElevatorSystemLogic({ index: elevatorIndex }: { index
   const toggleMovingElevatorToFree = (index: number) =>
     dispatchInfoState({ type: "TOGGLE_MOVING_ELEVATOR_TO_FREE", payload: { index } });
 
-  const increaseFloor = () => setFloor(floor + 1);
-  const decreaseFloor = () => setFloor(floor - 1);
+  const setCurrentFloor = (floor: number) =>
+    dispatchInfoState({ type: "SET_CURRENT_FLOOR", payload: { currentFloor: floor } });
+
+  const increaseFloor = () => {
+    setFloor(floor + 1);
+    setCurrentFloor(floor + 1);
+  };
+  const decreaseFloor = () => {
+    setFloor(floor - 1);
+    setCurrentFloor(floor - 1);
+  };
 
   useEffect(() => {
     const movingElevator = movingElevators.find(
