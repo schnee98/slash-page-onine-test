@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Header from "./components/header/Header";
+import Menu from "./components/menu/Menu";
 import ElevatorSystem from "./components/elevator/ElevatorSystem";
 
 const elevatorSystems = [...Array.from({ length: 3 })].map((_, index) => <ElevatorSystem index={index} />);
@@ -7,7 +7,7 @@ const elevatorSystems = [...Array.from({ length: 3 })].map((_, index) => <Elevat
 export default function App() {
   return (
     <Wrapper>
-      <Header />
+      <Menu />
       <Content>{elevatorSystems}</Content>
     </Wrapper>
   );

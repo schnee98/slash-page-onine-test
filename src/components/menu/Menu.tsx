@@ -1,17 +1,17 @@
 import styled from "styled-components";
 import ElevatorButton from "./ElevatorButton";
-import CallButton from './CallButton';
-import { useContext } from 'react';
-import { ElevatorInfoContext } from '../../context/ElevatorInfoContext';
+import CallButton from "./CallButton";
+import { useContext } from "react";
+import { ElevatorInfoContext } from "../../context/ElevatorInfoContext";
 
 const buttons = Array.from({ length: 15 }).map((_, index) => <ElevatorButton index={index} />);
 
-export default function Header() {
+export default function Menu() {
   const [{ currentFloor }] = useContext(ElevatorInfoContext);
 
   return (
     <Wrapper>
-      <ButtonList >{buttons}</ButtonList>
+      <ButtonList>{buttons}</ButtonList>
       <CallButton />
       <span>현재 {currentFloor}층입니다.</span>
     </Wrapper>
