@@ -6,11 +6,11 @@ const MAX_HEIGHT = 630;
 const BUTTON_HEIGHT = 42;
 
 export default function ElevatorSystem(props: { index: number }) {
-  const { floor } = useElevatorSystemLogic(props);
+  const { floor, isMoving } = useElevatorSystemLogic(props);
 
   return (
     <Wrapper>
-      <Elevator floor={floor}>{floor}</Elevator>
+      <Elevator floor={floor} isMoving={isMoving}>{floor}</Elevator>
     </Wrapper>
   );
 }
@@ -22,16 +22,17 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const Elevator = styled.div<{ floor: number }>`
-  position: absolute;
-  width: ${MAX_WIDTH - 8}px;
+const Elevator = styled.div<{ floor: number, isMoving: boolean }>`
+width: ${MAX_WIDTH - 8}px;
   height: ${BUTTON_HEIGHT - 2}px;
   top: ${({ floor }) => MAX_HEIGHT - floor * BUTTON_HEIGHT}px;
+  outline: ${({ isMoving }) => isMoving ? "2px solid red" : "2px solid gray"};
+  color: ${({ isMoving }) => isMoving ? "red" : "gray"};
+
+  position: absolute;
   left: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
-  outline: 2px solid gray;
-  color: gray;
   font-weight: 700;
 `;
