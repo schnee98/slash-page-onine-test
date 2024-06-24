@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import ElevatorButton from "./ElevatorButton";
 import { useContext } from "react";
-import { ElevatorInfoContext } from "../../context/ElevatorStack";
+import { ElevatorInfoContext } from "../../context/ElevatorInfoContext";
 
 const buttons = Array.from({ length: 15 });
 

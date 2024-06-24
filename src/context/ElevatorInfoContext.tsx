@@ -11,10 +11,8 @@ interface ElevatorInfoState {
 }
 
 type ElevatorAction =
-  | { type: "ADD_FREE_ELEVATOR"; payload: { index: number } }
-  | { type: "REMOVE_FREE_ELEVATOR" }
-  | { type: "ADD_MOVING_ELEVATOR"; payload: { movingElevator: MovingElevator } }
-  | { type: "REMOVE_MOVING_ELEVATOR"; payload: { index: number } };
+  | { type: "TOGGLE_FREE_ELEVATOR_TO_MOVE"; payload: { targetFloor: number } }
+  | { type: "TOGGLE_MOVING_ELEVATOR_TO_FREE"; payload: { index: number } };
 
 type ElevatorInfoType = [ElevatorInfoState, Dispatch<ElevatorAction>];
 
@@ -26,36 +24,31 @@ export const ElevatorInfoContext = createContext<ElevatorInfoType>([
   () => {},
 ]);
 
-const initialInfoState = {
+const initialInfoState: ElevatorInfoState = {
   freeElevators: [2, 1, 0],
   movingElevators: [],
 };
 
-const elevatorReducer = (state: ElevatorInfoState, action: ElevatorAction) => {
+const elevatorReducer = (state: ElevatorInfoState, action: ElevatorAction): ElevatorInfoState => {
   const { freeElevators, movingElevators } = state;
-  const { type } = action;
+  const { type, payload } = action;
   const newFreeElevators = [...freeElevators];
   const newMovingElevators = [...movingElevators];
   switch (type) {
-    case "ADD_FREE_ELEVATOR":
+    case "TOGGLE_FREE_ELEVATOR_TO_MOVE":
+      const elevatorToMove = newFreeElevators.pop();
+
+      if (elevatorToMove === undefined) return state;
+      newMovingElevators.push({ index: elevatorToMove, targetFloor: payload.targetFloor });
+      return { freeElevators: newFreeElevators, movingElevators: newMovingElevators };
+    case "TOGGLE_MOVING_ELEVATOR_TO_FREE":
+      const { index } = payload;
+      const updatedMovingElevators = newMovingElevators.filter((elevator) => elevator.index !== index);
+
+      newFreeElevators.push(index);
       return {
-        ...state,
-        freeElevators: [...freeElevators, action.payload.index],
-      };
-    case "REMOVE_FREE_ELEVATOR":
-      newFreeElevators.pop();
-      return { ...state, freeElevators: newFreeElevators };
-    case "ADD_MOVING_ELEVATOR":
-      newMovingElevators.push(action.payload.movingElevator);
-      return {
-        ...state,
-        movingElevators: newMovingElevators,
-      };
-    case "REMOVE_MOVING_ELEVATOR":
-      newMovingElevators.pop();
-      return {
-        ...state,
-        movingElevators: newMovingElevators,
+        freeElevators: newFreeElevators,
+        movingElevators: updatedMovingElevators,
       };
     default:
       return state;
