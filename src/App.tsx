@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import Header from "./components/header/Header";
-import Building from "./components/elevator/Building";
+import ElevatorSystem from "./components/elevator/ElevatorSystem";
 
 export default function App() {
   return (
     <Wrapper>
       <Header />
-      <Building />
+      <ElevatorSystem />
     </Wrapper>
   );
 }
