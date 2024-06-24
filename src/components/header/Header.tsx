@@ -1,13 +1,17 @@
 import styled from "styled-components";
 import ElevatorButton from "./ElevatorButton";
+import { useContext } from 'react';
+import { ElevatorStackContext } from '../../context/ElevatorStack';
 
 const buttons = Array.from({ length: 15 });
 
 export default function Header() {
+  const [stack] = useContext(ElevatorStackContext);
+
   return (
     <Wrapper>
       <Description>호출</Description>
-      <ButtonList>{buttons.map((_, index) => ElevatorButton({ index }))}</ButtonList>
+      <ButtonList stack={stack}>{buttons.map((_, index) => ElevatorButton({ index }))}</ButtonList>
     </Wrapper>
   );
 }
@@ -22,7 +26,8 @@ const Description = styled.span`
   font-weight: 700;
 `;
 
-const ButtonList = styled.div`
+const ButtonList = styled.div<{ stack: Array<number> }>`
   display: flex;
   border: 1px solid #ccc9c9a4;
+  background-color: ${({ stack }) => stack.length === 0 ? "gray" : "transparent" };
 `;
