@@ -1,6 +1,5 @@
-import { MouseEvent, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { ElevatorInfoContext } from "../../context/ElevatorInfoContext";
+import useElevatorButtonLogic from "../../logics/useElevatorButtonLogic";
 
 const getButtonColor = ($clicked: boolean, $stackLength: number) => {
   if ($stackLength === 0) return "#000";
@@ -8,40 +7,15 @@ const getButtonColor = ($clicked: boolean, $stackLength: number) => {
 };
 
 export default function ElevatorButton({ index }: { index: number }) {
-  const [{ freeElevators, movingElevators }, dispatchInfoState] = useContext(ElevatorInfoContext);
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-
-  const toggleFreeElevatorToMove = (targetFloor: number) =>
-    dispatchInfoState({ type: "TOGGLE_FREE_ELEVATOR_TO_MOVE", payload: { targetFloor } });
-
-  const handleClick = ({ currentTarget }: MouseEvent<HTMLButtonElement>) => {
-    const movingElevator = movingElevators.find(({ targetFloor }) => targetFloor === index + 1);
-    const targetFloor = Number(currentTarget.textContent);
-    const newIsClicked = !isClicked;
-
-    if (newIsClicked && !movingElevator) {
-      setIsClicked(newIsClicked);
-      toggleFreeElevatorToMove(targetFloor);
-      return;
-    }
+  const { isClicked, stackLength, handleClick } = useElevatorButtonLogic({ index });
+  const buttonProps = {
+    $clicked: isClicked,
+    $stackLength: stackLength,
+    disabled: stackLength === 0,
+    onClick: handleClick,
   };
 
-  useEffect(() => {
-    const movingElevator = movingElevators.find(({ targetFloor }) => targetFloor === index + 1);
-
-    if (!movingElevator) setIsClicked(false);
-  }, [movingElevators])
-
-  return (
-    <Button
-      $clicked={isClicked}
-      $stackLength={freeElevators.length}
-      disabled={freeElevators.length === 0}
-      onClick={handleClick}
-    >
-      {index + 1}
-    </Button>
-  );
+  return <Button {...buttonProps}>{index + 1}</Button>;
 }
 
 const Button = styled.button<{ $clicked: boolean; $stackLength: number }>`
