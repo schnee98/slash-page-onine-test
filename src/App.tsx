@@ -1,16 +1,21 @@
-function App() {
+import styled from "styled-components";
+import Header from "./components/header/Header";
+import Building from "./components/elevator/Building";
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Wrapper>
+      <Header />
+      <Building />
+    </Wrapper>
   );
 }
 
-export default App;
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
