@@ -3,7 +3,7 @@ import ElevatorButton from "./ElevatorButton";
 import { useContext } from "react";
 import { ElevatorInfoContext } from "../../context/ElevatorInfoContext";
 
-const buttons = Array.from({ length: 15 });
+const buttons = Array.from({ length: 15 }).map((_, index) => <ElevatorButton index={index} />);
 
 export default function Header() {
   const [{ freeElevators: stack }] = useContext(ElevatorInfoContext);
@@ -11,7 +11,7 @@ export default function Header() {
   return (
     <Wrapper>
       <Description>호출</Description>
-      <ButtonList stack={stack}>{buttons.map((_, index) => ElevatorButton({ index }))}</ButtonList>
+      <ButtonList stack={stack}>{buttons}</ButtonList>
     </Wrapper>
   );
 }
