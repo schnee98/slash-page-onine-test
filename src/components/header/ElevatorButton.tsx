@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { MouseEvent, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { ElevatorInfoContext } from "../../context/ElevatorStack";
+import { ElevatorInfoContext } from "../../context/ElevatorInfoContext";
 
 const getButtonColor = ($clicked: boolean, $stackLength: number) => {
   if ($stackLength === 0) return "#000";
@@ -8,26 +8,29 @@ const getButtonColor = ($clicked: boolean, $stackLength: number) => {
 };
 
 export default function ElevatorButton({ index }: { index: number }) {
-  const [{ freeElevators }, dispatchInfoState] = useContext(ElevatorInfoContext);
+  const [{ freeElevators, movingElevators }, dispatchInfoState] = useContext(ElevatorInfoContext);
   const [isClicked, setIsClicked] = useState<boolean>(false);
 
-  const addFreeElevator = (newFreeElevator: number) =>
-    dispatchInfoState({ type: "ADD_FREE_ELEVATOR", payload: { index: newFreeElevator } });
+  const toggleFreeElevatorToMove = (targetFloor: number) =>
+    dispatchInfoState({ type: "TOGGLE_FREE_ELEVATOR_TO_MOVE", payload: { targetFloor } });
 
-  const popFreeElevator = () => dispatchInfoState({ type: "REMOVE_FREE_ELEVATOR" });
-
-  const handleClick = () => {
+  const handleClick = ({ currentTarget }: MouseEvent<HTMLButtonElement>) => {
+    const movingElevator = movingElevators.find(({ targetFloor }) => targetFloor === index + 1);
+    const targetFloor = Number(currentTarget.textContent);
     const newIsClicked = !isClicked;
-    setIsClicked(newIsClicked);
 
-    if (newIsClicked) {
-      popFreeElevator();
+    if (newIsClicked && !movingElevator) {
+      setIsClicked(newIsClicked);
+      toggleFreeElevatorToMove(targetFloor);
       return;
     }
-
-    // 추후에 엘레베이터의 이동이 끝날 때 동작하도록 구현
-    addFreeElevator(1);
   };
+
+  useEffect(() => {
+    const movingElevator = movingElevators.find(({ targetFloor }) => targetFloor === index + 1);
+
+    if (!movingElevator) setIsClicked(false);
+  }, [movingElevators])
 
   return (
     <Button
