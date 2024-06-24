@@ -28,7 +28,7 @@ export default function ElevatorButton({ index }: { index: number }) {
   };
 
   return (
-    <Button $clicked={isClicked} $stackLength={stack.length} onClick={handleClick}>
+    <Button $clicked={isClicked} $stackLength={stack.length} disabled={stack.length === 0} onClick={handleClick}>
       {index + 1}
     </Button>
   );
@@ -41,5 +41,5 @@ const Button = styled.button<{ $clicked: boolean; $stackLength: number }>`
   background-color: transparent;
   color: ${({ $clicked, $stackLength }) => getButtonColor($clicked, $stackLength)};
   font-weight: ${({ $clicked }) => ($clicked ? "900" : "400")};
-  cursor: pointer;
+  cursor: ${({ $stackLength }) => ($stackLength === 0 ? "default" : "pointer")};
 `;
