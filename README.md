@@ -21,5 +21,4 @@
 
 ## 상태관리
 
-- [ ] 1부터 15까지의 Floor 전역 상태 추가
-- [ ] `length`가 3개인 ElevatorStack 전역 상태 추가
+- [ ] `length`가 최대 3개인 ElevatorStack 전역 상태 추가
